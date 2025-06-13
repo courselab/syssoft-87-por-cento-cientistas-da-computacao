@@ -1,5 +1,4 @@
 /*
- *    SPDX-FileCopyrightText: 2021 Monaco F. J. <monaco@usp.br>
  *    SPDX-FileCopyrightText: 2025 Arthur Vergaças <vergacas.arthur@bcg.com>
  *
  *    SPDX-License-Identifier: GPL-3.0-or-later
@@ -12,15 +11,9 @@
  *  Murillo Moraes Martins <murillomartins19@usp.br>
  */
 
-#include <stdio.h>
-#include <sleep.h>
+#ifndef SLEEP_H
+#define SLEEP_H
 
-int main(void) {
-  printf("Sleeping for 5 seconds!\r\n");
+void __attribute__((fastcall, naked)) sleep(int seconds);
 
-  sleep(5);
-
-  printf("Awaken!\n\r");
-
-  return 0;
-}
+#endif

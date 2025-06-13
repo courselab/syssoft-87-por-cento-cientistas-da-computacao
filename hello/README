@@ -26,7 +26,7 @@
 
  2) Study the code and understand how it works.
 
- 3) Implement a test a new function.
+ 3) Implement and test a new function.
 
     a) Add a new function to libc.S that uses the BIOS service 1.
 

@@ -13,6 +13,7 @@
 
 	.code16gcc
 	.global printf
+        .global sleep
 
 	.section .text
 
@@ -31,4 +32,32 @@ loop:
         jmp   loop
 end:
         mov %si, %ax
+        ret
+
+sleep:
+	mov   %cx, %bx # store seconds in %bx
+
+        # mul multiplies %ax by %bx, result in %dx:%ax
+        # while INT 15H 86H: Wait expects %cx:dx to contain the
+        # time in microseconds
+
+        # We can't simply multiply %bx by 1_000_000 because
+        # it won't fit in 16 bits. So we convert seconds to milliseconds,
+        # then milliseconds to microseconds.
+
+        mov   $1000, %ax
+        mul   %bx # %ax (1000) * %bx (seconds) -> convert seconds to milliseconds
+
+        # %ax now contains the milliseconds to sleep
+
+        mov $1000, %bx
+        mul %bx # %ax (milliseconds) * %bx (1000) -> convert milliseconds to microseconds
+
+        # move %dx:ax to %cx:dx to conform with int 15h 86h
+        mov %dx, %cx
+        mov %ax, %dx
+
+        mov   $0x86, %ah # function 0x86: Wait
+        int   $0x15      # issue interrupt
+
         ret
