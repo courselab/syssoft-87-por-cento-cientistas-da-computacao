@@ -176,7 +176,7 @@ Tip: Taking a look at the './Makefile' may be instructive.
 
 - dyn Explain the differences between
 
-      	a) static library
+    a) static library
       b) dynamic library with relocatable code
       c) dynamic library with position-independent-code
 

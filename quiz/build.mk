@@ -2,7 +2,10 @@ p1 : p1.c
 	gcc -m32 $< -o $@
 
 p2 : p2.c
-	gcc -Wall -m32  -O0 -fno-stack-protector -fno-pic -fno-pie -Wl,-no-pie $(CFLAGS) -O0 $<  -o $@
+	gcc -Wall -m32 -fno-stack-protector $<  -o $@
+
+p2fix : p2fix.c
+	gcc -Wall -m32 -fno-stack-protector $<  -o $@
 
 p3 : p3.c
 	gcc -Wall -m32  -O0  -fno-pic -fno-pie -Wl,-no-pie $< -o $@
@@ -28,4 +31,4 @@ libp4.so : p4a.o p4b.o
 .PHONY: clean
 
 clean:
-	rm -f *.o p1 p2 p3 *.a *.so p4-v1 p4-v2 p4-v3
+	rm -f *.o p1 p2 p2fix p3 *.a *.so p4-v1 p4-v2 p4-v3
