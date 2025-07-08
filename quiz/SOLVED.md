@@ -40,6 +40,16 @@ Se essas instruções forem omitidas, o código ainda pode funcionar, especialme
 
 Esse comportamento está diretamente ligado ao ABI x86, que define que a pilha cresce em direção aos endereços menores e que variáveis locais devem ser armazenadas nessa área. No caso da main, a linha possui um propósito diferente: essa instrução alinha a pilha em um múltiplo de 16 bytes, o que é uma exigência para garantir performance e compatibilidade com instruções SSE, chamadas de funções externas (como de bibliotecas) e convenções modernas de alinhamento. Não há alocação de variáveis locais diretamente nessa linha, ao contrário das funções foo e bar.
 
+`e.` Podemos notar uma nova instrução na função `foo` logo após chamar `bar`:
+    
+    804919f:       e8 0e 00 00 00          call   80491b2 <bar>
+    80491a4:       83 c4 10                add    $0x10,%esp
+    80491a7:       0f be c0                movsbl %al,%eax
+
+A instrução `movsbl`, que extende um byte representando um número com sinal para um inteiro de 32-bits com sinal, o compilador fez isso por agora a função `bar` retorna um `char` e a função `foo` espera receber um `int`, então, para evitar problemas na hora de retornar esse valor, o compilador transformou o resultado de `char` para `int` "estendendo" o valor de `char` armazenado no `al` para o registrador de 32-bits `eax`.
+
+As declarações das funções antes da `main` são importantes pois elas que mostram para o compilador qual o tipo de retorno correto, caso elas não estivessem ali, o compilador assumiria que o retorno de `bar` é um `int`, então ele não teria inserido a instrução demonstrada acima, o que poderia levar a erros por isso ser comportamento não definido (ou *undefined behaviour*, como é mais conhecido).
+
 -----
 
 `P4 a.` Quando executamos os comandos `./p4-v1` e `./p4-v2` obtemos o mesmo resultado. Ao executar o comando `./p4-v3`, recebemos a seguinte mensagem:
